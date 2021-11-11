@@ -1,9 +1,9 @@
 const quizUrl = 'https://opentdb.com/api.php?amount=10&type=multiple'
 
-let h1 = document.getElementsByTagName('h1')[0];
-let p = document.getElementsByTagName('p')[0];
-let submitArea = document.getElementById('submit-area');
-let questionArea = document.getElementById('question-area');
+const h1 = document.getElementById('title');
+const p = document.getElementById('info');
+const submitArea = document.getElementById('submit-area');
+const questionArea = document.getElementById('question-area');
 
 class Quiz {
     constructor(quizzes, count, match) {
@@ -49,12 +49,17 @@ const fetchQuiz = async () => {
     
     submitArea.style.display = 'none';
 
-    const response = await fetch(quizUrl);
-    const data = await response.json();
-    const quizzes = data.results;
-    const quiz = new Quiz(quizzes, 0, 0);
-
-    showQuiz(quiz);
+    try {
+        const response = await fetch(quizUrl);
+        const data = await response.json();
+        const quizzes = data.results;
+        const quiz = new Quiz(quizzes, 0, 0);
+        showQuiz(quiz);
+    } catch (e) {
+        console.error(e.message);
+        alert('もう一度やり直してください');
+        showHome();
+    }
 }
 
 const showQuiz = (quiz) => {    
@@ -146,6 +151,7 @@ const showHome = () => {
     startButton.innerText = '開始';
     startButton.addEventListener('click', () => fetchQuiz());
 
+    submitArea.style.display = '';    
     submitArea.innerHTML = '';
     submitArea.appendChild(startButton);
 }
